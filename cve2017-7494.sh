@@ -30,14 +30,17 @@ export sambarev="$(echo $sambaversionstring | cut -d"." -f3)"
 
 function performupgrade {
 get_package_type
-    case OS in
+    case $OS in
     "DEB")
       apt-get update && apt-get install --only-upgrade samba && echo "Samba upgrade finished :)" || echo "Something went wrong! Could not automatically upgrade samba :("
       ;;
     "RPM")
       yum update samba && echo "Samba upgrade finished :)" || echo "Something went wrong! Could not automatically upgrade samba :("
       ;;
+    *)
+      echo "Sorry but we couln't find apt-get nor yum binaries in path. We cannot determine the kind of packet system that this distro uses :("
     esac
+    echo "Exiting..."
 }
 
 function performcheck {
@@ -68,7 +71,7 @@ if [[ ( $sambamajor -eq 3 && $sambaminor -gt 4 ) || \
   echo "(that is, updating the SAMBA package for you if you want)."
   echo -n "Try to do it now? y/n:"
   read answer
-  case answer in
+  case $answer in
   "Y"|"y")
     performupgrade
     ;;
