@@ -70,7 +70,7 @@ if [[ ( $sambamajor -eq 3 && $sambaminor -gt 4 ) || \
   read answer
   case answer in
   Y|y)
-    perform_upgrade
+    performupgrade
     ;;
   *)
     echo "OK. Not doing anything. Suit yourself..."
