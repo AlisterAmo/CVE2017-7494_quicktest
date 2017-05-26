@@ -5,9 +5,15 @@
 function check_root_privileges {
 if [[ $EUID != 0 ]] ; then
   echo "WARNING: We are not root so we will not be able to correct vulnerability if found"
-  echo "Proceeding to assessment anyway"
+  echo "Please call me from a root shel or using sudo"
+  exit
 fi
 }
+
+function get_package_type {
+  yum &> /dev/null && export OS="RPM" || apt-get &> /dev/null && export OS="DEB"
+}
+
 
 function getsambaversion {
 sambaroute=$(which samba)
