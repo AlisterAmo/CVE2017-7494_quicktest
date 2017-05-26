@@ -5,7 +5,7 @@
 function check_root_privileges {
 if [[ $EUID != 0 ]] ; then
   echo "WARNING: We are not root so we will not be able to correct vulnerability if found"
-  echo "Please call me from a root shel or using sudo"
+  echo "Please call me from a root shell or using sudo"
   exit
 fi
 }
@@ -36,7 +36,7 @@ function performcheck {
 # major version 4 && minor version = 4  && rev < 14 == vulnerable
 # major version 4 && minor version = 5  && rev < 10 == vulnerable
 # major version 4 && minor version = 6  && rev < 4  == vulnerable
-# rest == safe
+# rest == safe 
 
 if [[ ( $sambamajor -eq 3 && $sambaminor -gt 4 ) || \
       ( $sambamajor -eq 4 && $sambaminor -lt 4 ) || \
@@ -44,18 +44,36 @@ if [[ ( $sambamajor -eq 3 && $sambaminor -gt 4 ) || \
       ( $sambamajor -eq 4 && $sambaminor -eq 5 && $sambarev -lt 10 ) || \
       ( $sambamajor -eq 4 && $sambaminor -eq 6 && $sambarev -lt 4  ) ]]; then
   # vulnerable version 
-  echo "The SAMBA version in this computer seems to be amongst the affected." 
-  echo "Please do one of the following:"
-  echo " a) upgrade SAMBA version"
-  echo " b) patch a tarball of SAMBA sources, rebuild and reinstall"
-  echo " c) disable named pipes in smb.conf"
-  echo " d) better remove SAMBA from the system if you dont need it ;)"
+  echo "The SAMBA version in this computer most likely (unless some specific security patches manually applied recently) is amongst the affected." 
+  echo "If you are certain that no security patches and no SAMBA package updates have been performed recently, please do one of the following:"
+  echo " * [EASIEST] Upgrade SAMBA version. Centos, RHEL, Debian and Ubuntu have issued package updates to address the issue already."
+  echo " * [MEDIUM] disable named pipes in smb.conf"
+  echo " * [ADVANCED] patch a tarball of SAMBA sources, rebuild and reinstall"
+  echo " * [MOST INTELLIGENT] better remove SAMBA from the system and choose an alternative to share your files though the Internet ;)"
+  echo
+  echo "I can update the SAMBA package for you if you want and your distro es RHEL/CentOS/Debian/Ubuntu/Derivatives."
+  echo -n "Do it now? y/n:"
+  read answer
+  case answer in
+  Y|y)
+    get_package_type
+    case OS in
+    "DEB")
+      apt-get update && apt-get install --only-upgrade samba && echo "Samba upgrade finished :)" || echo "Something went wrong! Could not automatically upgrade samba :("
+      ;;
+    "RPM")
+      yum update samba && echo "Samba upgrade finished :)" || echo "Something went wrong! Could not automatically upgrade samba :("
+      ;;
+    esac
+    ;;
+  *)
+    echo "OK. Not doing anything. Please take care..."
+  ;;
+  esac
 else
   echo "System seems to have a version of SAMBA with no CVE 2017-4787 vulnerability. Yay! :)"
-
 fi
 }
-
 
 ## MAIN () ##
 # check_root_privileges # not necessary yet, patching not implemented
