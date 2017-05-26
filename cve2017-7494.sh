@@ -69,7 +69,7 @@ if [[ ( $sambamajor -eq 3 && $sambaminor -gt 4 ) || \
   echo -n "Try to do it now? y/n:"
   read answer
   case answer in
-  Y|y)
+  "Y"|"y")
     performupgrade
     ;;
   *)
