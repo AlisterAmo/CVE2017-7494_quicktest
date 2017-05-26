@@ -38,7 +38,7 @@ get_package_type
       yum update samba && echo "Samba upgrade finished :)" || echo "Something went wrong! Could not automatically upgrade samba :("
       ;;
     *)
-      echo "Sorry but we couln't find apt-get nor yum binaries in path. We cannot determine the kind of packet system that this distro uses :("
+      echo "Sorry but we couln't find apt-get nor yum binaries in path. We cannot determine the kind of software package system that this distro uses :("
     esac
     echo "Exiting..."
 }
