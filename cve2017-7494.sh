@@ -11,7 +11,7 @@ fi
 }
 
 function get_package_type {
-  yum &> /dev/null && export OS="RPM" || apt-get &> /dev/null && export OS="DEB"
+  which yum &> /dev/null && export OS="RPM" || which apt-get &> /dev/null && export OS="DEB"
 }
 
 
